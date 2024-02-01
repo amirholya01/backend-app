@@ -1,6 +1,7 @@
 const morgan = require("morgan");
 const swaggerJs = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
+const {AllRoutes} = require("./router/router");
 
 module.exports = class Application{
 
@@ -80,7 +81,7 @@ module.exports = class Application{
 
 
     createRoutes(){
-
+        this.#app.use(AllRoutes);
     }
 
 
