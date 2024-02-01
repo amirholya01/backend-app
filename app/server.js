@@ -2,6 +2,7 @@ const morgan = require("morgan");
 const swaggerJs = require("swagger-jsdoc");
 const swaggerUi = require("swagger-ui-express");
 const {AllRoutes} = require("./router/router");
+const createError = require("http-errors");
 
 module.exports = class Application{
 
@@ -90,11 +91,18 @@ module.exports = class Application{
         //Not found -404
         this.#app.use((req, res, next) =>{
             // Handle 404 errors
-            return res.status(404).json({
-                statusCode: 404,
-                message: "The page or address was not found"
+           next(createError(404, "The Page or Address was not found"))
+        });
+        this.#app.use((err, req, res, next) => {
+            const serverError = createError(500, "InternalServerError");
+            const statusCode = err.status || serverError.status;
+            const message = err.message || serverError.message;
+            return res.status(statusCode).json({
+                errors: {
+                    statusCode,
+                    message
+                }
             })
         })
-
         }
 }
