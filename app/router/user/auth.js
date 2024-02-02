@@ -63,7 +63,7 @@ router.post("/register", registerValidation(), AuthController.register);
  *              required: true
  *              type: string
  *          -   name: password
- *              description: The password should at least be between 6 and 16 characters
+ *              description: The password should at least be between 4 and 8 characters --- start with the capital letter--includes numbers - _
  *              in: formData
  *              required: true
  *              type: string

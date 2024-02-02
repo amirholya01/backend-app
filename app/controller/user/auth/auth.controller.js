@@ -4,6 +4,7 @@ const {UserModel} = require("../../../model/user");
 const {StatusCodes : HttpStatus} = require("http-status-codes")
 const {validationResult} = require("express-validator");
 const bcrypt = require("bcrypt");
+const {SignAccessToken} = require("../../../util/function");
 class AuthController extends  Controller{
 
     //register
@@ -55,27 +56,16 @@ class AuthController extends  Controller{
           // If the passwords don't match, throw an error
           if(!compareResult) throw {status : HttpStatus.BAD_REQUEST, message : "The username or password is incorrect"}
 
-          // Generate a token for the user
-          // const token = tokenGenerator(user);
-          // console.log("Generated JWT token:", token);
 
-          // Save the token to the user's record in the database
-          // user.token = token;
-          // await user.save()
-
-          // Set the JWT token as a cookie
-          // res.cookie('jwt', token, {
-          //     httpOnly: true,
-          //     sameSite: 'none',
-          //     secure: true,
-          //     maxAge: 3600000, // 1 hour
-          // });
+          //access-token
+          const accessToken = await SignAccessToken(user._id);
 
           // Send a response with the token to the user
           return res.status(HttpStatus.OK).json({
               statusCode: HttpStatus.OK,
               data: {
-                  message: "Your login was done successfully"
+                  message: "Your login was done successfully",
+                  accessToken
               }
           })
       }catch (e) {
